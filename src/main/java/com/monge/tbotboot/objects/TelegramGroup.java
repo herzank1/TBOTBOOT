@@ -4,16 +4,18 @@
  */
 package com.monge.tbotboot.objects;
 
+import com.monge.tbotboot.objects.Receptor;
+
 /**
  *
  * @author DeliveryExpress
  */
-public class TelegramGroup extends Receptor {
+public abstract class TelegramGroup extends Receptor {
 
-    public TelegramGroup(String id, String bot) {
-        super(id, bot);
-    }
+    @Override
+    public abstract String getId();
 
-   
+    @Override
+    public abstract String getBot();
     
 }

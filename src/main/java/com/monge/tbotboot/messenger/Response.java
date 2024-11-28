@@ -6,7 +6,6 @@ package com.monge.tbotboot.messenger;
 
 import com.monge.tbotboot.objects.Receptor;
 import com.monge.tbotboot.objects.TelegramFile;
-import com.monge.tbotboot.objects.TelegramUser;
 
 
 /**
@@ -165,9 +164,9 @@ public class Response {
 
     }
 
-    public static void editMessage(TelegramUser telegramUser, String messageId, String text, MessageMenu menu) {
+    public static void editMessage(Receptor receptor, String messageId, String text, MessageMenu menu) {
 
-        Response response = new Response(telegramUser);
+        Response response = new Response(receptor);
         response.setAction(ResponseAction.EDIT_MESSAGE);
         response.setEditMessageId(messageId);
         response.setText(text);
@@ -175,7 +174,16 @@ public class Response {
         response.execute();
     }
 
-    public static void deleteMessage(Xupdate xupdate) {
+    public static void deleteGroupMessage(Xupdate xupdate) {
+
+        Response response = new Response(xupdate.getTelegramGroup());
+        response.setAction(ResponseAction.DELETE_MESSAGE);
+        response.setMessageId(xupdate.getMessageId());
+        response.execute();
+
+    }
+    
+        public static void deleteMessage(Xupdate xupdate) {
 
         Response response = new Response(xupdate.getTelegramUser());
         response.setAction(ResponseAction.DELETE_MESSAGE);
@@ -184,8 +192,8 @@ public class Response {
 
     }
 
-    public static void sendFile(TelegramUser telegramUser, TelegramFile file, String text, MessageMenu menu) {
-        Response response = new Response(telegramUser);
+    public static void sendFile(Receptor receptor, TelegramFile file, String text, MessageMenu menu) {
+        Response response = new Response(receptor);
         response.setAction(ResponseAction.SEND_FILE);
         response.setFile(file);
         response.setText(text);

@@ -5,11 +5,12 @@
 package com.monge.tbotboot.messenger;
 
 
+import com.monge.tbotboot.objects.TelegramUser;
+import com.monge.tbotboot.objects.TelegramGroup;
 import com.monge.tbotboot.commands.Command;
 import com.monge.tbotboot.objects.Position;
+import com.monge.tbotboot.objects.Receptor;
 import com.monge.tbotboot.objects.TelegramFile;
-import com.monge.tbotboot.objects.TelegramGroup;
-import com.monge.tbotboot.objects.TelegramUser;
 import java.util.List;
 import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -173,10 +174,25 @@ public class Xupdate {
      *
      * @return explicitamente el usuario que envio este mensaje
      */
-    public TelegramUser getTelegramUser() {
-  
-        return new TelegramUser(this.getSenderId(), this.getBotUserName());
+    public  TelegramUser getTelegramUser(){
+    
+        TelegramUser tu = new TelegramUser(){
+            @Override
+            public String getId() {
+            
+                return getSenderId();
+            }
 
+            @Override
+            public String getBot() {
+            
+                return getBotUserName();
+            
+            }
+        };
+        
+        return tu;
+    
     }
 
     /**
@@ -184,19 +200,30 @@ public class Xupdate {
      *
      * @return el grupo o el usuario de este update
      */
-    public TelegramGroup getTelegramGroup() {
-        TelegramUser read = null;
+    public  TelegramGroup getTelegramGroup(){
+        
+        TelegramGroup tg = new TelegramGroup(){
+            @Override
+            public String getId() {
+            
+                return getFromId();
+            }
 
-        if (this.isGroupMessage()) {
-            return new TelegramGroup(this.getFromId(),this.getBotUserName());
+            @Override
+            public String getBot() {
+            
+                return getBotUserName();
+            
+            }
+        };
+        
+        return tg;
 
-        } else {
-
-            return null;
-        }
 
     }
-
+    
+   
+  
     /**
      * *
      *
@@ -267,5 +294,7 @@ public class Xupdate {
         return null;
 
     }
+
+    
 
 }
