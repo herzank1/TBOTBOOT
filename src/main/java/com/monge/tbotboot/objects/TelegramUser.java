@@ -10,13 +10,11 @@ import com.monge.tbotboot.objects.Receptor;
  *
  * @author DeliveryExpress
  */
-public abstract class TelegramUser extends Receptor{
+public  class TelegramUser extends Receptor{
 
-    
-    @Override
-    public abstract String getId();
+    public TelegramUser(String id, String bot) {
+        super(id, bot);
+    }
 
-    @Override
-    public abstract String getBot();
     
 }

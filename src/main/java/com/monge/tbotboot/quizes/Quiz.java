@@ -6,15 +6,10 @@ package com.monge.tbotboot.quizes;
 
 import com.monge.tbotboot.messenger.Xupdate;
 
-
-
 /**
  *
- * @author DeliveryExpress
- * Clase padre de todos los cuestionarios
+ * @author DeliveryExpress Clase padre de todos los cuestionarios
  */
-
-
 public abstract class Quiz {
 
     String userId;
@@ -26,23 +21,22 @@ public abstract class Quiz {
         this.step = 0;
     }
 
-    abstract void execute(Xupdate xupdate);
+    public abstract void execute(Xupdate xupdate);
 
-    void next() {
+    public void next() {
         this.step += 1;
     }
 
-   
-    void goTo(int step) {
+    public void goTo(int step) {
         this.step = step;
     }
-   
-    void back() {
+
+    public void back() {
         this.step -= 1;
     }
 
-    void destroy(){
-    QuizesControl.destroy(this);
+    public void destroy() {
+        QuizesControl.destroy(this);
     }
 
     public String getUserId() {
@@ -68,9 +62,5 @@ public abstract class Quiz {
     public void setFinalized(boolean finalized) {
         this.finalized = finalized;
     }
-    
-    
-    
-  
 
 }

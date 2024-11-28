@@ -24,6 +24,7 @@ public class TelegramFile{
     String fileName;
     String details;
     String type;
+    String bot;
 
     
         /**
@@ -36,6 +37,7 @@ public class TelegramFile{
         this.fileId = document.getFileId();
         this.fileName = document.getFileName();
         this.type = FileType.DOCUMENT;
+        this.bot = aThis.getBotUserName();
 
 
     }
@@ -46,9 +48,13 @@ public class TelegramFile{
         this.details = aThis.getText();
         this.fileName = aThis.getText();
         this.type = FileType.VIDEO;
+        this.bot = aThis.getBotUserName();
 
 
     }
+
+    public TelegramFile() {
+      }
 
     public String getFileId() {
         return fileId;
@@ -80,6 +86,14 @@ public class TelegramFile{
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getBot() {
+        return bot;
+    }
+
+    public void setBot(String bot) {
+        this.bot = bot;
     }
     
     

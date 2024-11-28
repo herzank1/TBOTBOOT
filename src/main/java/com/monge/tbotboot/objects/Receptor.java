@@ -8,13 +8,33 @@ package com.monge.tbotboot.objects;
  *
  * @author DeliveryExpress
  */
-public abstract class Receptor {
+public class Receptor {
 
+    String id;
+    String bot;
+
+    public Receptor(String id, String bot) {
+        this.id = id;
+        this.bot = bot;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getBot() {
+        return bot;
+    }
+
+    public void setBot(String bot) {
+        this.bot = bot;
+    }
     
-    public abstract String getId();
-    public abstract String getBot();
-    
-    
+   
 
   
 }
