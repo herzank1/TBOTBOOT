@@ -37,6 +37,12 @@ public class Xupdate {
 
     }
 
+    public Update getUpdate() {
+        return update;
+    }
+    
+    
+
     public String getBotUserName() {
         return botUserName;
     }

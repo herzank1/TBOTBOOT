@@ -10,11 +10,12 @@ import com.monge.tbotboot.messenger.Xupdate;
 
 /**
  *
- * @author DeliveryExpress
+ * @author CommandsHandlers
+ * Interface, toda la interaccion con los usuarios seran a travez del metodo execute
  */
 public interface CommandsHandlers {
 
     /*executar la logica de la interaccion de los usuarios de telegram con el nodo o bot*/
-    void execute(Xupdate xupdate);
+    public void execute(Xupdate xupdate);
 
 }

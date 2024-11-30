@@ -4,8 +4,6 @@
  */
 package com.monge.tbotboot.messenger;
 
-
-
 import com.monge.tbotboot.commands.CommandsHandlers;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,13 +18,11 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
  *
  * @author DeliveryExpress
  */
-
 public class Bot extends TelegramLongPollingBot {
-
 
     String userName;
     String apiKey;
-    
+
     CommandsHandlers commandsHandlers;
 
     public int MAX_MSG_PER_SECOND = 30; //telegram Api allow 30 msg per seconds
@@ -40,8 +36,8 @@ public class Bot extends TelegramLongPollingBot {
         this.apiKey = apiKey;
 
     }
-    
-     public Bot(String userName, String apiKey,CommandsHandlers commandsHandlers) {
+
+    public Bot(String userName, String apiKey, CommandsHandlers commandsHandlers) {
         this.userName = userName;
         this.apiKey = apiKey;
         this.commandsHandlers = commandsHandlers;
@@ -55,8 +51,6 @@ public class Bot extends TelegramLongPollingBot {
     public void setCommandsHandlers(CommandsHandlers commandsHandlers) {
         this.commandsHandlers = commandsHandlers;
     }
-     
-     
 
     public boolean init() {
         TelegramBotsApi telegramBotsApi;
@@ -75,18 +69,17 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
- 
+
         Xupdate xupdate = new Xupdate(update, this.getBotUsername());
+    
 
         if (SystemSecurity.allowUpdate(xupdate)) {
             commandsHandlers.execute(xupdate);
-        }else{
-        System.out.println("Update invalido");
+        } else {
+            System.out.println("Update invalido");
         }
 
     }
-
-   
 
     @Override
     public String getBotUsername() {

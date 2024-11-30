@@ -4,6 +4,7 @@
  */
 package com.monge.tbotboot.messenger;
 
+import com.monge.tbotboot.commands.CommandsHandlers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,13 +18,25 @@ public class BotsHandler {
 
     static Map<String, Bot> botsList = new HashMap<>();
 
-    public static void init(Bot ... bots) {
+    /***
+     * 
+     * @param ch CommandsHandlers, todos los bots debe usar el mismo CommandHandler para interactuar
+     * @param bots Bot o nodo
+     */
+    public static void init(CommandsHandlers ch,Bot ... bots) {
+        if(ch==null){
+        throw new NullPointerException("CommandsHandlers no puede ser nulo.");
+        }
+        
         for (Bot b : bots) {
             System.out.println("Cargando bot "+b.getBotUsername()+" "+b.getBotToken());
            
+            b.setCommandsHandlers(ch);
             b.init();
             add(b);
         }
+        
+        System.out.println("bots success!");
 
     }
     

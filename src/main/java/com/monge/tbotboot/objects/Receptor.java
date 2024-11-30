@@ -12,6 +12,12 @@ public class Receptor {
 
     String id;
     String bot;
+    
+    /***
+     * 
+     * @param id
+     * @param bot 
+     */
 
     public Receptor(String id, String bot) {
         this.id = id;
