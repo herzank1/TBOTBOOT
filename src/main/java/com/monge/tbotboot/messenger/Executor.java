@@ -4,7 +4,6 @@
  */
 package com.monge.tbotboot.messenger;
 
-
 import com.monge.tbotboot.objects.FileType;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,7 +37,10 @@ public class Executor {
      * entregar
      */
     public static Response execute(Response response) {
-  
+
+        if (response.getReceptor() == null) {
+            throw new NullPointerException("El receptor no puede ser nulo");
+        }
 
         Bot botOut = BotsHandler.botsList.get(response.getReceptor().getBot());
 
@@ -102,18 +104,18 @@ public class Executor {
 
                 } catch (TelegramApiException ex) {
                     String message = ex.getMessage();
-                    Logger.getLogger(Executor.class.getName()).log(Level.SEVERE, null, ex);
-           
+                    // 
+
                     if (message.equals(TelegramApiExecptionsMessage.CANT_EDIT_MSG)) {
                         response.setAction(ResponseAction.SEND_MESSAGE);
                         response.execute();
 
+                    } else {
+                        Logger.getLogger(Executor.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
 
                 break;
-                
-                
 
             case ResponseAction.DELETE_MESSAGE:
 
@@ -135,9 +137,9 @@ public class Executor {
                 break;
 
             case ResponseAction.SEND_FILE:
-                
+
                 /*obtenemos el file id relacionado con el bot que solicita*/
-            String fileId = response.getFile().getFileId();
+                String fileId = response.getFile().getFileId();
 
                 switch (response.getFile().getType()) {
 
@@ -168,14 +170,13 @@ public class Executor {
 
                 break;
 
-
         }
 
         return response;
     }
 
     public static ArrayList<ChatMember> execute(String botUserName, GetChatAdministrators chatAdmins) {
-    
+
         try {
             Bot botOut = BotsHandler.botsList.get(botUserName);
             ArrayList<ChatMember> execute = botOut.execute(chatAdmins);
@@ -183,7 +184,7 @@ public class Executor {
         } catch (TelegramApiException ex) {
             Logger.getLogger(Executor.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return null;
     }
 

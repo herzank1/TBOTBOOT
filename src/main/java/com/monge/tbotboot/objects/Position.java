@@ -1,6 +1,9 @@
 
 package com.monge.tbotboot.objects;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 
 public class Position {
 
@@ -103,6 +106,47 @@ public String getUrlNavigateTo() {
 
     return (int) Math.round(distance); // Redondea la distancia a un entero
 }
+  
+     /**
+     * Genera una URL para navegar en Google Maps desde la posición actual
+     * hacia una dirección o coordenadas específicas.
+     *
+     * @param to Dirección o coordenadas de destino
+     * @return URL para abrir en Google Maps
+     */
+    public static String navigateTo(String to) {
+        try {
+            // Codificar la dirección o coordenadas para evitar caracteres especiales
+            String encodedTo = URLEncoder.encode(to, "UTF-8");
+
+            // Retornar la URL con la posición actual como origen
+            return "https://www.google.com/maps/dir/?api=1&origin=current&destination=" + encodedTo;
+        } catch (UnsupportedEncodingException e) {
+            // Manejar excepción en caso de error en la codificación
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+        /**
+     * Genera una URL de Google Maps para mostrar un marcador en una ubicación específica.
+     *
+     * @param to Dirección o coordenadas donde colocar el marcador
+     * @return URL de Google Maps con el marcador
+     */
+    public static String getMarkerUrl(String to) {
+        try {
+            // Codificar la dirección o coordenadas
+            String encodedTo = URLEncoder.encode(to, "UTF-8");
+
+            // Construir la URL para mostrar el marcador
+            return "https://www.google.com/maps?q=" + encodedTo;
+        } catch (UnsupportedEncodingException e) {
+            // Manejar excepción en caso de error en la codificación
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 
 

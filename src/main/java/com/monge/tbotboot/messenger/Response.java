@@ -144,15 +144,15 @@ public class Response {
         this.gotoGroup = gotoGroup;
     }
   
-    public static void sendMessage(Receptor receptor, String text, MessageMenu menu) {
+    public static Response sendMessage(Receptor receptor, String text, MessageMenu menu) {
         Response response = new Response(receptor);
         response.setText(text);
         response.setMenu(menu);
-        response.execute();
+        return response.execute();
 
     }
 
-    public static void editMediaMessage(Receptor receptor, String messageId, TelegramFile file, String text, MessageMenu menu) {
+    public static Response editMediaMessage(Receptor receptor, String messageId, TelegramFile file, String text, MessageMenu menu) {
 
         Response response = new Response(receptor);
         response.setAction(ResponseAction.EDIT_MEDIA_MESSAGE);
@@ -160,45 +160,45 @@ public class Response {
         response.setFile(file);
         response.setText(text);
         response.setMenu(menu);
-        response.execute();
+        return response.execute();
 
     }
 
-    public static void editMessage(Receptor receptor, String messageId, String text, MessageMenu menu) {
+    public static Response editMessage(Receptor receptor, String messageId, String text, MessageMenu menu) {
 
         Response response = new Response(receptor);
         response.setAction(ResponseAction.EDIT_MESSAGE);
         response.setEditMessageId(messageId);
         response.setText(text);
         response.setMenu(menu);
-        response.execute();
+        return response.execute();
     }
 
-    public static void deleteGroupMessage(Xupdate xupdate) {
+    public static Response deleteGroupMessage(Xupdate xupdate) {
 
         Response response = new Response(xupdate.getTelegramGroup());
         response.setAction(ResponseAction.DELETE_MESSAGE);
         response.setMessageId(xupdate.getMessageId());
-        response.execute();
+        return response.execute();
 
     }
     
-        public static void deleteMessage(Xupdate xupdate) {
+        public static Response deleteMessage(Xupdate xupdate) {
 
         Response response = new Response(xupdate.getTelegramUser());
         response.setAction(ResponseAction.DELETE_MESSAGE);
         response.setMessageId(xupdate.getMessageId());
-        response.execute();
+        return response.execute();
 
     }
 
-    public static void sendFile(Receptor receptor, TelegramFile file, String text, MessageMenu menu) {
+    public static Response sendFile(Receptor receptor, TelegramFile file, String text, MessageMenu menu) {
         Response response = new Response(receptor);
         response.setAction(ResponseAction.SEND_FILE);
         response.setFile(file);
         response.setText(text);
         response.setMenu(menu);
-        response.execute();
+        return response.execute();
     }
 
 

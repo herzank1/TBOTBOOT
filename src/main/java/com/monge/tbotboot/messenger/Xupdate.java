@@ -40,8 +40,6 @@ public class Xupdate {
     public Update getUpdate() {
         return update;
     }
-    
-    
 
     public String getBotUserName() {
         return botUserName;
@@ -78,6 +76,12 @@ public class Xupdate {
         }
 
         return false;
+
+    }
+
+    public boolean isCallBack() {
+
+        return this.update.hasCallbackQuery();
 
     }
 
@@ -188,7 +192,7 @@ public class Xupdate {
      */
     public TelegramGroup getTelegramGroup() {
 
-       return new TelegramGroup(getFromId(), getBotUserName());
+        return new TelegramGroup(getFromId(), getBotUserName());
 
     }
 

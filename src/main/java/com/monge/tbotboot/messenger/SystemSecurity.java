@@ -91,6 +91,16 @@ public class SystemSecurity {
 
     }
 
+    public static int getMAX_REQUEST_COUNTER() {
+        return MAX_REQUEST_COUNTER;
+    }
+
+    public static void setMAX_REQUEST_COUNTER(int MAX_REQUEST_COUNTER) {
+        SystemSecurity.MAX_REQUEST_COUNTER = MAX_REQUEST_COUNTER;
+    }
+    
+    
+
     public static List<String> getBlackList() {
         return blackList;
     }

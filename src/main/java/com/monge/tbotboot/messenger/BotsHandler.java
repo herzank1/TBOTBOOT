@@ -36,6 +36,8 @@ public class BotsHandler {
             add(b);
         }
         
+        SystemSecurity.init();
+        
         System.out.println("bots success!");
 
     }
