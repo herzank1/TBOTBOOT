@@ -11,7 +11,11 @@ import com.monge.tbotboot.objects.Position;
 import com.monge.tbotboot.objects.Receptor;
 import com.monge.tbotboot.objects.TelegramFile;
 import java.util.List;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Document;
+import org.telegram.telegrambots.meta.api.objects.Location;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.Video;
@@ -50,33 +54,18 @@ public class Xupdate {
     }
 
     public boolean isGroupMessage() {
-
-        if (this.update.hasCallbackQuery()) {
-            if (this.update.getCallbackQuery().getMessage().getChat().isGroupChat()
-                    || this.update.getCallbackQuery().getMessage().getChat().isSuperGroupChat()) {
-
-                return true;
-            }
-
-        } else if (this.update.hasMessage()) {
-            if (this.update.getMessage().getChat().isGroupChat()
-                    || this.update.getMessage().getChat().isSuperGroupChat()) {
-
-                return true;
-            }
-        } else if (this.update.hasEditedMessage()) {
-
-            if (this.update.getEditedMessage().getChat().isGroupChat()
-                    || this.update.getEditedMessage().getChat().isSuperGroupChat()) {
-
-                return true;
-
-            }
-
+        if (update.hasCallbackQuery()) {
+            return isGroupChat(update.getCallbackQuery().getMessage().getChat());
+        } else if (update.hasMessage()) {
+            return isGroupChat(update.getMessage().getChat());
+        } else if (update.hasEditedMessage()) {
+            return isGroupChat(update.getEditedMessage().getChat());
         }
-
         return false;
+    }
 
+    private boolean isGroupChat(Chat chat) {
+        return chat.isGroupChat() || chat.isSuperGroupChat();
     }
 
     public boolean isCallBack() {
@@ -111,39 +100,37 @@ public class Xupdate {
         return "";
     }
 
-    /**
-     * *
-     *
-     * @return sender or user Id the origin
-     */
     public String getSenderId() {
+        User sender = null;
 
-        if (this.update.hasCallbackQuery()) {
-            return this.update.getCallbackQuery().getFrom().getId().toString();
-
-        } else if (this.update.hasMessage()) {
-            return this.update.getMessage().getFrom().getId().toString();
-
-        } else if (this.update.hasEditedMessage()) {
-            return this.update.getEditedMessage().getFrom().getId().toString();
+        if (update.hasCallbackQuery()) {
+            sender = update.getCallbackQuery().getFrom();
+        } else if (update.hasMessage()) {
+            sender = update.getMessage().getFrom();
+        } else if (update.hasEditedMessage()) {
+            sender = update.getEditedMessage().getFrom();
         }
 
-        return "null";
-
+        return (sender != null) ? sender.getId().toString() : "null";
     }
 
     public String getText() {
+        if (update.hasCallbackQuery()) {
+            return update.getCallbackQuery().getData();
+        } else if (update.hasMessage()) {
+            return getTextFromMessage(update.getMessage());
+        } else if (update.hasEditedMessage()) {
+            return getTextFromMessage(update.getEditedMessage());
+        }
+        return "null";
+    }
 
-        if (this.update.hasCallbackQuery()) {
-            return this.update.getCallbackQuery().getData();
-        } else if (this.update.hasMessage() && this.update.getMessage().hasText()) {
-            return this.update.getMessage().getText();
-        } else if (this.update.hasEditedMessage() && this.update.getEditedMessage().hasText()) {
-            return this.update.getEditedMessage().getText();
+    private String getTextFromMessage(Message message) {
+        if (message.getCaption() != null) {
+            return message.getCaption();
         }
 
-        return "null";
-
+        return (message != null && message.hasText()) ? message.getText() : "null";
     }
 
     public Command getCommand() {
@@ -155,23 +142,19 @@ public class Xupdate {
     }
 
     /**
-     * *
-     *
-     * @return works for private and groups chats
+     * @return Position object if location is available; otherwise null.
      */
     public Position getLocation() {
-
         if (this.update.hasMessage() && this.update.getMessage().hasLocation()) {
-            return new Position(this.update.getMessage().getLocation().getLatitude(),
-                    this.update.getMessage().getLocation().getLongitude());
-
+            return createPosition(this.update.getMessage().getLocation());
         } else if (this.update.hasEditedMessage() && this.update.getEditedMessage().hasLocation()) {
-            return new Position(this.update.getMessage().getLocation().getLatitude(),
-                    this.update.getMessage().getLocation().getLongitude());
+            return createPosition(this.update.getEditedMessage().getLocation());
         }
-
         return null;
+    }
 
+    private Position createPosition(Location location) {
+        return new Position(location.getLatitude(), location.getLongitude());
     }
 
     /**
@@ -192,36 +175,42 @@ public class Xupdate {
      */
     public TelegramGroup getTelegramGroup() {
 
-        return new TelegramGroup(getFromId(), getBotUserName());
+        if (this.isGroupMessage()) {
+
+            return new TelegramGroup(getFromId(), getBotUserName());
+        } else {
+            return null;
+        }
 
     }
 
     /**
-     * *
+     * Retrieves the message ID from the update.
      *
-     * @return works for private and groups chats
+     * @return the message ID as a String, or null if not applicable.
      */
     public String getMessageId() {
-
         if (this.update.hasMessage()) {
-            return String.valueOf(this.update.getMessage().getMessageId());
-
+            return extractMessageId(this.update.getMessage().getMessageId());
         } else if (this.update.hasEditedMessage()) {
-            return String.valueOf(this.update.getEditedMessage().getMessageId());
-        } else if (update.hasCallbackQuery()) {
-
-            return String.valueOf(update.getCallbackQuery().getMessage().getMessageId());
+            return extractMessageId(this.update.getEditedMessage().getMessageId());
+        } else if (this.update.hasCallbackQuery()) {
+            return extractMessageId(this.update.getCallbackQuery().getMessage().getMessageId());
         }
-
         return null;
+    }
 
+    private String extractMessageId(Integer messageId) {
+        return messageId != null ? messageId.toString() : null;
     }
 
     public boolean hasNewChatMember() {
-
-        List<User> newChatMembers = this.update.getMessage().getNewChatMembers();
-        return newChatMembers != null || !newChatMembers.isEmpty();
-
+        // Verificamos si el mensaje está presente y si tiene nuevos miembros en el chat
+        if (this.update.hasMessage() && this.update.getMessage() != null) {
+            List<User> newChatMembers = this.update.getMessage().getNewChatMembers();
+            return newChatMembers != null && !newChatMembers.isEmpty();
+        }
+        return false; // Retorna false si no hay mensaje o si no hay nuevos miembros
     }
 
     public List<User> getNewChatMembers() {
@@ -253,6 +242,11 @@ public class Xupdate {
     }
 
     public TelegramFile getFile() {
+        if (this.update.hasMessage() && this.update.getMessage().hasPhoto()) {
+            List<PhotoSize> photo = this.update.getMessage().getPhoto();
+            return new TelegramFile(this, photo);
+        }
+
         if (this.update.hasMessage() && this.update.getMessage().hasDocument()) {
             Document document = this.update.getMessage().getDocument();
             return new TelegramFile(this, document);
@@ -265,6 +259,23 @@ public class Xupdate {
 
         return null;
 
+    }
+
+    public String toStringDetails() {
+        return "🤖 Bot User Name: " + getBotUserName() + "\n"
+                + "📩 Update Type: " + (isCallBack() ? "Callback Query" : "Message") + "\n"
+                + "👥 Group Message: " + (isGroupMessage() ? "Yes" : "No") + "\n"
+                + "🔑 From ID: " + getFromId() + "\n"
+                + "👤 Sender ID: " + getSenderId() + "\n"
+                + "💬 Text: " + getText() + "\n"
+                + "📌 Command: " + getCommand().command() + "\n"
+                + "📍 Location: " + (hasLocation() ? getLocation().toString() : "No Location") + "\n"
+                + "👤 Telegram User: " + getTelegramUser().toStringDetails() + "\n"
+                + "👥 Telegram Group: " + (getTelegramGroup() != null ? getTelegramGroup().toStringDetails() : "No Group") + "\n"
+                + "📝 Message ID: " + getMessageId() + "\n"
+                + "🆕 New Chat Members: " + (hasNewChatMember() ? getNewChatMembers().toString() : "No New Members") + "\n"
+                + "⏳ Is Expired: " + (isExpired() ? "Yes" : "No") + "\n"
+                + "📂 File: " + (getFile() != null ? getFile().toString() : "No File Attached");
     }
 
 }

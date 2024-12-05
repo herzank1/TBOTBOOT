@@ -30,13 +30,13 @@ public class Response {
 
     /*extra*/
     String threadId;
-    boolean isHtml;
 
     TelegramFile file;
 
     /*returned messageId*/
     String messageId;
     boolean gotoGroup;
+    private boolean html;
 
     /**
      * *
@@ -112,13 +112,15 @@ public class Response {
         this.threadId = threadId;
     }
 
+    public void setHtml() {
+        this.html = true;
+    }
+    
     public boolean isHtml() {
-        return isHtml;
+         return this.html;
     }
 
-    public void setIsHtml(boolean isHtml) {
-        this.isHtml = isHtml;
-    }
+    
 
     public TelegramFile getFile() {
         return file;
@@ -171,6 +173,17 @@ public class Response {
         response.setEditMessageId(messageId);
         response.setText(text);
         response.setMenu(menu);
+        return response.execute();
+    }
+    
+        public static Response editHtmlMessage(Receptor receptor, String messageId, String text, MessageMenu menu) {
+
+        Response response = new Response(receptor);
+        response.setAction(ResponseAction.EDIT_MESSAGE);
+        response.setEditMessageId(messageId);
+        response.setText(text);
+        response.setMenu(menu);
+        response.setHtml();
         return response.execute();
     }
 

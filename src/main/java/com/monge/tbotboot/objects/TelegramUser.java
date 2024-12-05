@@ -15,6 +15,13 @@ public  class TelegramUser extends Receptor{
     public TelegramUser(String id, String bot) {
         super(id, bot);
     }
+    
+    
+      public String toStringDetails() {
+        return "🤖 Bot: " + this.bot + "\n"
+                + "🔑 ID: " + this.id + "\n";
+ 
+    }
 
     
 }

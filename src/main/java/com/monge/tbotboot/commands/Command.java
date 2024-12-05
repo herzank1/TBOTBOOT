@@ -53,7 +53,7 @@ public class Command {
 
     public String command() {
 
-        if (getParam(0).isEmpty()) {
+        if (getParam(0)==null||getParam(0).isEmpty()) {
             return this.data;
         } else {
             return getParam(0);

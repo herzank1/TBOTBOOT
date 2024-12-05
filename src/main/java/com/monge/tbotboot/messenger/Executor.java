@@ -10,11 +10,17 @@ import java.util.ArrayList;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.CreateChatInviteLink;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatAdministrators;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageMedia;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.ChatInviteLink;
+import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
@@ -59,6 +65,7 @@ public class Executor {
                 sm.setText(response.getText());
                 if (response.isHtml()) {
                     sm.enableHtml(true);
+
                 }
                 if (response.getThreadId() != null) {
                     sm.setMessageThreadId(Integer.valueOf(response.getThreadId()));
@@ -113,8 +120,19 @@ public class Executor {
                     } else {
                         Logger.getLogger(Executor.class.getName()).log(Level.SEVERE, null, ex);
                     }
+
                 }
 
+                break;
+
+            case ResponseAction.EDIT_MEDIA_MESSAGE:
+                
+             //   org.telegram.telegrambots.meta.api.methods.updatingmessages.
+                
+                /*EditMessageMedia
+                Al parecer no existe el metodo setCaption 
+                */
+             
                 break;
 
             case ResponseAction.DELETE_MESSAGE:
@@ -188,9 +206,49 @@ public class Executor {
         return null;
     }
 
+    public static ChatInviteLink execute(String botUserName, CreateChatInviteLink link) {
+
+        try {
+            Bot botOut = BotsHandler.botsList.get(botUserName);
+            ChatInviteLink execute = botOut.execute(link);
+            return execute;
+        } catch (TelegramApiException ex) {
+            Logger.getLogger(Executor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+
+    }
+
+    public static File execute(String botUserName, GetFile file) {
+
+        Bot botOut = BotsHandler.botsList.get(botUserName);
+        try {
+            File execute = botOut.execute(file);
+            return execute;
+        } catch (TelegramApiException ex) {
+            Logger.getLogger(Executor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public static Message execute(String botUserName, SendPhoto sendPhoto) {
+
+        Bot botOut = BotsHandler.botsList.get(botUserName);
+        try {
+            Message execute = botOut.execute(sendPhoto);
+            return execute;
+        } catch (TelegramApiException ex) {
+            Logger.getLogger(Executor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+
+    }
+
     public static interface TelegramApiExecptionsMessage {
 
         String CANT_EDIT_MSG = "Error executing org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText query: [400] Bad Request: message can't be edited";
+        String NO_TEXT_TO_EDIT = "Error executing org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText query: [400] Bad Request: there is no text in the message to edit";
 
     }
 

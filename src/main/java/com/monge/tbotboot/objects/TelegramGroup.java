@@ -10,17 +10,22 @@ import com.monge.tbotboot.objects.Receptor;
  *
  * @author DeliveryExpress
  */
-public  class TelegramGroup extends Receptor {
+public class TelegramGroup extends Receptor {
 
-    /***
-     * 
+    /**
+     * *
+     *
      * @param id
-     * @param bot 
+     * @param bot
      */
     public TelegramGroup(String id, String bot) {
         super(id, bot);
     }
 
-   
-    
+    public String toStringDetails() {
+        return "🤖 Bot: " + this.bot + "\n"
+                + "🔑 ID: " + this.id + "\n";
+ 
+    }
+
 }
