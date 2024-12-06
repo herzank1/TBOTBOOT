@@ -22,6 +22,19 @@ public class Command {
         }
 
     }
+    
+    /***
+     * Crea un comando splitiando el texto con otro splitter
+     * @param data
+     * @param splitter 
+     */
+     public Command(String data,String splitter) {
+        this.data = data;
+        if (data.startsWith("/")) {
+            this.params = data.split(splitter);
+        }
+
+    }
 
     public String getData() {
         return data;

@@ -10,11 +10,13 @@ import com.monge.tbotboot.commands.Command;
 import com.monge.tbotboot.objects.Position;
 import com.monge.tbotboot.objects.Receptor;
 import com.monge.tbotboot.objects.TelegramFile;
+import java.util.ArrayList;
 import java.util.List;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.Location;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -71,6 +73,54 @@ public class Xupdate {
     public boolean isCallBack() {
 
         return this.update.hasCallbackQuery();
+
+    }
+
+    public boolean hasReply() {
+        // Verifica si el update contiene un mensaje
+        if (update.hasMessage()) {
+            Message message = update.getMessage();
+            // Verifica si el mensaje tiene un reply
+         
+            return message.getReplyToMessage() != null;
+        }
+        return false;
+    }
+    
+    public Message getMessage() {
+        return update.getMessage();
+    }
+
+    public Message getRepliedMessage() {
+        return update.getMessage().getReplyToMessage();
+    }
+
+  
+
+    public Long getRepliedUserId() {
+        // Verifica que el Update tiene un mensaje y que hay un reply
+        if (update.hasMessage() && update.getMessage().getReplyToMessage() != null) {
+            Message repliedMessage = update.getMessage().getReplyToMessage();
+            User repliedUser = repliedMessage.getFrom(); // Usuario del mensaje al que se replica
+            return repliedUser.getId(); // Devuelve el ID del usuario
+        }
+        return null; // No hay reply o usuario
+    }
+
+    public ArrayList<User> getReplyMencionedUsers(Message message) {
+
+        ArrayList<User>mentionsList = new ArrayList<>();
+        // Obtén las entidades del mensaje
+        List<MessageEntity> entities = message.getEntities();
+
+        for (MessageEntity entity : entities) {
+            // Verifica si la entidad es un text_mention (mención de usuario con ID)
+            if ("text_mention".equals(entity.getType())) {
+                mentionsList.add(entity.getUser()); // Devuelve el ID del usuario mencionado
+            }
+        }
+
+        return mentionsList;
 
     }
 
