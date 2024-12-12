@@ -37,7 +37,7 @@ public class Xupdate {
      * @param update
      * @param botUserName incoming bot
      */
-    Xupdate(Update update, String botUserName) {
+    public Xupdate(Update update, String botUserName) {
         this.update = update;
         this.botUserName = botUserName;
 
@@ -288,7 +288,7 @@ public class Xupdate {
         long currentTimestamp = System.currentTimeMillis() / 1000;
 
         // Comprobar si han pasado más de 10 minutos (600 segundos)
-        return (currentTimestamp - date) > 600;
+        return (currentTimestamp - date) > SystemSecurity.UPDATE_EXPIRATION_TIME;
     }
 
     public TelegramFile getFile() {

@@ -3,6 +3,7 @@ package com.monge.tbotboot.quizes;
 
 
 
+import com.monge.tbotboot.messenger.MessageMenu;
 import com.monge.tbotboot.messenger.Response;
 import com.monge.tbotboot.messenger.Xupdate;
 import com.monge.tbotboot.objects.Receptor;
@@ -12,6 +13,7 @@ import java.util.Map;
 /**
  *
  * @author DeliveryExpress
+ * controla los cuestionarios de los usuarios atravez de su ID
  */
 public class QuizesControl {
 
@@ -46,12 +48,17 @@ public class QuizesControl {
                 case "/esc":
 
                     quiz.destroy();
-                    Response.sendMessage(xupdate.getTelegramUser(), "Proceso finalizado!", null);
+                    
+                    Response.sendMessage(xupdate.getTelegramUser(), "Proceso finalizado!", MessageMenu.okAndDeleteMessage());
 
                     break;
 
                 default:
-                    quiz.execute(xupdate);
+                    
+                    try{
+                        quiz.execute(xupdate);
+                    }catch(Exception e){e.printStackTrace();}
+                    
                     break;
 
             }
@@ -63,8 +70,8 @@ public class QuizesControl {
 
     }
 
-    static void destroy(Quiz aThis) {
-        quizes.remove(aThis.getUserId());
+    static void destroy(Quiz quiz) {
+        quizes.remove(quiz.getUserId());
 
     }
 

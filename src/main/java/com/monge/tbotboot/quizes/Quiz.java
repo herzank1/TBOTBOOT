@@ -9,6 +9,9 @@ import com.monge.tbotboot.messenger.Xupdate;
 /**
  *
  * @author DeliveryExpress Clase padre de todos los cuestionarios
+ * contiene los metodos para interactua como un questionario -> pregunta - respuesta
+ * a travez de mensajes y asi estructurar los inputs del usurio usando paso para recolectar informacion.
+ * 
  */
 public abstract class Quiz {
 

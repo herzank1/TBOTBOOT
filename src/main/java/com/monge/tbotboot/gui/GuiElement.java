@@ -1,38 +1,26 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.monge.tbotboot.gui;
 
+import com.monge.tbotboot.messenger.MessageMenu.Button;
 
-public abstract class GuiElement {
-
-    private GuiElement parent;
-    private String text;
+/**
+ * *
+ * Representa un elemento del GUI
+ *
+ * @author DeliveryExpress
+ */
+public abstract class GuiElement extends GuiBase{
 
     public GuiElement(GuiElement parent, String text) {
-        this.parent = parent;
-        this.text = text;
+        super(parent, text);
     }
 
+    /*Muestra la informacion en el mensaje de telegram*/
     public abstract String draw();
 
-    public GuiElement getParent() {
-        return parent;
-    }
+   
 
-    public void setParent(GuiElement parent) {
-        this.parent = parent;
+    public Button getAsButton(int index) {
+        return new Button(super.getText(), String.valueOf(index));
     }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-    
-    
 
 }

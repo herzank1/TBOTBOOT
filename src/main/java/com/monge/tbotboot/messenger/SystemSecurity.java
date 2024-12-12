@@ -23,6 +23,7 @@ public class SystemSecurity {
     static Map<String, Integer> requestCounter = new HashMap<>();
     static List<String>blackList=new ArrayList<>();
     static int MAX_REQUEST_COUNTER = 3;
+    static long UPDATE_EXPIRATION_TIME = 1000*60;
 
     public static void init() {
 
@@ -98,6 +99,14 @@ public class SystemSecurity {
     public static void setMAX_REQUEST_COUNTER(int MAX_REQUEST_COUNTER) {
         SystemSecurity.MAX_REQUEST_COUNTER = MAX_REQUEST_COUNTER;
     }
+
+    public static long getUPDATE_EXPIRATION_TIME() {
+        return UPDATE_EXPIRATION_TIME;
+    }
+
+    public static void setUPDATE_EXPIRATION_TIME(long UPDATE_EXPIRATION_TIME) {
+        SystemSecurity.UPDATE_EXPIRATION_TIME = UPDATE_EXPIRATION_TIME;
+    }
     
     
 
@@ -116,5 +125,9 @@ public class SystemSecurity {
      public static boolean removeBlackList(String id) {
         return blackList.remove(id);
     }
+     
+     public static void clearBlackList(){
+     blackList.clear();
+     }
 
 }

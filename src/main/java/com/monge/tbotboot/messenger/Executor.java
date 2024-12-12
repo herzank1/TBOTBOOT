@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.CreateChatInviteLink;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatAdministrators;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
@@ -126,13 +127,11 @@ public class Executor {
                 break;
 
             case ResponseAction.EDIT_MEDIA_MESSAGE:
-                
-             //   org.telegram.telegrambots.meta.api.methods.updatingmessages.
-                
+
+                //   org.telegram.telegrambots.meta.api.methods.updatingmessages.
                 /*EditMessageMedia
                 Al parecer no existe el metodo setCaption 
-                */
-             
+                 */
                 break;
 
             case ResponseAction.DELETE_MESSAGE:
@@ -183,6 +182,31 @@ public class Executor {
                         }
 
                         break;
+                        
+                    case FileType.IMAGE:
+                        
+                        SendPhoto sendPhoto = new SendPhoto();
+                        sendPhoto.setChatId(response.getReceptor().getId());
+                        sendPhoto.setCaption(response.getText());
+                        InputFile photo = new InputFile(fileId);
+                        sendPhoto.setPhoto(photo);
+
+                        if (response.getMenu() != null) {
+                            sendPhoto.setReplyMarkup((InlineKeyboardMarkup) response.getMenu().getReplyKeyboard());
+
+                        }
+
+                         {
+                            try {
+                                botOut.execute(sendPhoto);
+                            } catch (TelegramApiException ex) {
+                                Logger.getLogger(Executor.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        
+                        
+                        break;
+
 
                 }
 
@@ -243,6 +267,18 @@ public class Executor {
         }
         return null;
 
+    }
+
+    public static Message execute(String botUserName, SendDocument sendDocument) {
+
+        Bot botOut = BotsHandler.botsList.get(botUserName);
+        try {
+            Message execute = botOut.execute(sendDocument);
+            return execute;
+        } catch (TelegramApiException ex) {
+            Logger.getLogger(Executor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     public static interface TelegramApiExecptionsMessage {

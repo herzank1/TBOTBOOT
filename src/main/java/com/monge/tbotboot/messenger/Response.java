@@ -7,13 +7,11 @@ package com.monge.tbotboot.messenger;
 import com.monge.tbotboot.objects.Receptor;
 import com.monge.tbotboot.objects.TelegramFile;
 
-
 /**
  *
  * @author DeliveryExpress Representa la accion o el mensaje que se enviara a
  * TelegramUser contiene el cuerpo y lo elementos internos del mensaje o accion
  */
-
 public class Response {
 
     /*Usuario de destino*/
@@ -115,12 +113,10 @@ public class Response {
     public void setHtml() {
         this.html = true;
     }
-    
-    public boolean isHtml() {
-         return this.html;
-    }
 
-    
+    public boolean isHtml() {
+        return this.html;
+    }
 
     public TelegramFile getFile() {
         return file;
@@ -145,7 +141,7 @@ public class Response {
     public void setGotoGroup(boolean gotoGroup) {
         this.gotoGroup = gotoGroup;
     }
-  
+
     public static Response sendMessage(Receptor receptor, String text, MessageMenu menu) {
         Response response = new Response(receptor);
         response.setText(text);
@@ -175,8 +171,8 @@ public class Response {
         response.setMenu(menu);
         return response.execute();
     }
-    
-        public static Response editHtmlMessage(Receptor receptor, String messageId, String text, MessageMenu menu) {
+
+    public static Response editHtmlMessage(Receptor receptor, String messageId, String text, MessageMenu menu) {
 
         Response response = new Response(receptor);
         response.setAction(ResponseAction.EDIT_MESSAGE);
@@ -195,12 +191,21 @@ public class Response {
         return response.execute();
 
     }
-    
-        public static Response deleteMessage(Xupdate xupdate) {
+
+    public static Response deleteMessage(Xupdate xupdate) {
 
         Response response = new Response(xupdate.getTelegramUser());
         response.setAction(ResponseAction.DELETE_MESSAGE);
         response.setMessageId(xupdate.getMessageId());
+        return response.execute();
+
+    }
+
+    public static Response deleteMessage(Receptor receptor, String messageId) {
+
+        Response response = new Response(receptor);
+        response.setAction(ResponseAction.DELETE_MESSAGE);
+        response.setMessageId(messageId);
         return response.execute();
 
     }
@@ -213,8 +218,6 @@ public class Response {
         response.setMenu(menu);
         return response.execute();
     }
-
-
 
     public Response execute() {
         return Executor.execute(this);

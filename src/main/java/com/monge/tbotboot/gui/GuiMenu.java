@@ -4,18 +4,26 @@
  */
 package com.monge.tbotboot.gui;
 
+import com.monge.tbotboot.messenger.MessageMenu;
 import java.util.ArrayList;
 
+/**
+ * *
+ * Esta clase representa un menu con submenus o items(Botones)
+ *
+ * @author DeliveryExpress
+ */
 public class GuiMenu extends GuiElement {
 
-    private ArrayList<GuiElement> elements;
+    /*lista menus o items de este menu*/
+    private ArrayList<GuiBase> elements;
 
     public GuiMenu(GuiElement parent, String text) {
         super(parent, text);
         elements = new ArrayList<>();
     }
 
-    public GuiElement getElement(int index) {
+    public GuiBase getElement(int index) {
         return elements.get(index);
     }
 
@@ -24,12 +32,14 @@ public class GuiMenu extends GuiElement {
         StringBuilder sb = new StringBuilder();
         int index = 0;
         sb.append(this.getText()).append(" --->\n");
-        for (GuiElement e : elements) {
+        for (GuiBase e : elements) {
 
             if (e instanceof GuiMenu) {
                 sb.append(" " + index + ") " + ((GuiMenu) e).getText() + " >").append("\n");
+            } else if (e instanceof GuiItem) {
+                sb.append(" " + index + ") " + ((GuiItem)e).getText()).append("\n");
             } else {
-                sb.append(" " + index + ") " + e.getText()).append("\n");
+                 sb.append(" " + index + ") * " + ((GuiItemAction)e).getText()).append("\n");
             }
             index += 1;
 
@@ -39,7 +49,35 @@ public class GuiMenu extends GuiElement {
 
     }
 
-    public void addItem(GuiElement e) {
+    public MessageMenu getAsMenu() {
+
+        MessageMenu menu = new MessageMenu();
+        int index = 0;
+
+        for (GuiBase e : elements) {
+
+            if (e instanceof GuiMenu) {
+                // sb.append(" " + index + ") " + ((GuiMenu) e).getText() + " >").append("\n");
+                menu.addAbutton(((GuiMenu) e).getAsButton(index), true);
+            } else if (e instanceof GuiItem) {
+                // sb.append(" " + index + ") " + e.getText()).append("\n");
+                menu.addAbutton(((GuiItem) e).getAsButton(index), true);
+            } else {
+                menu.addAbutton(((GuiItemAction) e).getAsButton(index), true);
+            }
+            index += 1;
+
+        }
+
+        return menu;
+
+    }
+
+    public MessageMenu.Button getAsButton(int index) {
+        return new MessageMenu.Button(super.getText() + " >", String.valueOf(index));
+    }
+
+    public void addItem(GuiBase e) {
         e.setParent(this);
         elements.add(e);
 

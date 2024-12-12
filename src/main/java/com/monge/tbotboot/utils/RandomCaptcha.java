@@ -4,7 +4,6 @@
  */
 package com.monge.tbotboot.utils;
 
-
 import com.monge.tbotboot.messenger.MessageMenu;
 import com.monge.tbotboot.messenger.MessageMenu.Button;
 import java.util.Arrays;
@@ -16,7 +15,6 @@ import java.util.Random;
  *
  * @author DeliveryExpress
  */
-
 public class RandomCaptcha {
 
     int num1, num2;
@@ -52,27 +50,53 @@ public class RandomCaptcha {
 
     public void setMenu(MessageMenu menu) {
 
-     // Generar las operaciones correctas e incorrectas
-    String correctResult = "" + getTotal();
-    String incorrectResult1 = getUnsuccess();
-    String incorrectResult2 = getUnsuccess();
+        // Generar las operaciones correctas e incorrectas
+        String correctResult = "" + getTotal();
+        String incorrectResult1 = getUnsuccess();
+        String incorrectResult2 = getUnsuccess();
 
-    // Crear botones con sus respectivas acciones
-    Button successOperation = new Button(correctResult, "/go&" + fileHash);
-    Button unSuccessOperation1 = new Button(incorrectResult1, "/fail&");
-    Button unSuccessOperation2 = new Button(incorrectResult2, "/fail&");
+        // Crear botones con sus respectivas acciones
+        Button successOperation = new Button(correctResult, "/go&" + fileHash);
+        Button unSuccessOperation1 = new Button(incorrectResult1, "/fail&");
+        Button unSuccessOperation2 = new Button(incorrectResult2, "/fail&");
 
-    // Crear una lista de botones
-    Button[] operations = {successOperation, unSuccessOperation1, unSuccessOperation2};
+        // Crear una lista de botones
+        Button[] operations = {successOperation, unSuccessOperation1, unSuccessOperation2};
 
-    // Mezclar las operaciones de manera aleatoria
-    List<Button> shuffledButtons = Arrays.asList(operations);
-    Collections.shuffle(shuffledButtons);
+        // Mezclar las operaciones de manera aleatoria
+        List<Button> shuffledButtons = Arrays.asList(operations);
+        Collections.shuffle(shuffledButtons);
 
-    // Agregar los botones al menú
-    for (Button button : shuffledButtons) {
-        menu.addButton(button, false); // Agregar los botones en orden aleatorio
+        // Agregar los botones al menú
+        for (Button button : shuffledButtons) {
+            menu.addButton(button, false); // Agregar los botones en orden aleatorio
+        }
+
     }
+
+    public void setMenu(MessageMenu menu, String callback, String callbackFail) {
+
+        // Generar las operaciones correctas e incorrectas
+        String correctResult = "" + getTotal();
+        String incorrectResult1 = getUnsuccess();
+        String incorrectResult2 = getUnsuccess();
+
+        // Crear botones con sus respectivas acciones
+        Button successOperation = new Button(correctResult, callback + fileHash);
+        Button unSuccessOperation1 = new Button(incorrectResult1, callbackFail);
+        Button unSuccessOperation2 = new Button(incorrectResult2, callbackFail);
+
+        // Crear una lista de botones
+        Button[] operations = {successOperation, unSuccessOperation1, unSuccessOperation2};
+
+        // Mezclar las operaciones de manera aleatoria
+        List<Button> shuffledButtons = Arrays.asList(operations);
+        Collections.shuffle(shuffledButtons);
+
+        // Agregar los botones al menú
+        for (Button button : shuffledButtons) {
+            menu.addButton(button, false); // Agregar los botones en orden aleatorio
+        }
 
     }
 

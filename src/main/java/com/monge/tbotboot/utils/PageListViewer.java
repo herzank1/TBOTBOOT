@@ -18,7 +18,7 @@ import java.util.List;
 public class PageListViewer<T> {
 
     private final int maxItemsPerPage;
-    private final ArrayList<T> list;
+    private  ArrayList<T> list;
 
     public PageListViewer(ArrayList<T> list, int maxItemsPerPage) {
         if (list == null || maxItemsPerPage <= 0) {
@@ -185,5 +185,15 @@ public class PageListViewer<T> {
         return menu;
 
     }
+
+    public ArrayList<T> getList() {
+        return list;
+    }
+
+    public void setList(ArrayList<T> list) {
+        this.list = list;
+    }
+    
+    
 
 }
