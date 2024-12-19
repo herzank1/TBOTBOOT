@@ -25,6 +25,7 @@ import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
+import org.telegram.telegrambots.meta.api.objects.media.InputMedia;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -96,7 +97,15 @@ public class Executor {
                     EditMessageText emt = new EditMessageText();
                     emt.setMessageId(Integer.valueOf(response.getEditMessageId()));
                     emt.setChatId(response.getReceptor().getId());
+                    
+                    if(response.getText()!=null){
                     emt.setText(response.getText());
+                    }else{
+                    emt.setText("null");
+                    }
+                    
+                    
+                    
                     if (response.isHtml()) {
                         emt.enableHtml(true);
                     }
@@ -128,10 +137,22 @@ public class Executor {
 
             case ResponseAction.EDIT_MEDIA_MESSAGE:
 
-                //   org.telegram.telegrambots.meta.api.methods.updatingmessages.
-                /*EditMessageMedia
-                Al parecer no existe el metodo setCaption 
-                 */
+                EditMessageMedia emd = new EditMessageMedia();
+                emd.setChatId(response.getReceptor().getId());
+                emd.setMessageId(Integer.parseInt(response.getMessageId()));
+                 if (response.getMenu() != null) {
+                        emd.setReplyMarkup((InlineKeyboardMarkup) response.getMenu().getReplyKeyboard());
+
+                    }
+             
+                try {
+                        Serializable execute = botOut.execute(emd);
+
+                        response.setMessageId(String.valueOf(execute.toString()));
+
+                    } catch (TelegramApiException ex) {
+                        Logger.getLogger(Executor.class.getName()).log(Level.SEVERE, null, ex);
+                    } 
                 break;
 
             case ResponseAction.DELETE_MESSAGE:

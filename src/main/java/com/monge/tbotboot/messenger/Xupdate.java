@@ -62,12 +62,18 @@ public class Xupdate {
             return isGroupChat(update.getMessage().getChat());
         } else if (update.hasEditedMessage()) {
             return isGroupChat(update.getEditedMessage().getChat());
+        } else if (update.hasChannelPost()) {
+            return update.getChannelPost().getSenderChat().isChannelChat();
         }
         return false;
     }
 
     private boolean isGroupChat(Chat chat) {
-        return chat.isGroupChat() || chat.isSuperGroupChat();
+        if (chat == null) {
+            return false;
+        }
+        // Verificar si es un grupo o un canal
+        return chat.isGroupChat() || chat.isSuperGroupChat() || chat.isChannelChat();
     }
 
     public boolean isCallBack() {
@@ -81,12 +87,12 @@ public class Xupdate {
         if (update.hasMessage()) {
             Message message = update.getMessage();
             // Verifica si el mensaje tiene un reply
-         
+
             return message.getReplyToMessage() != null;
         }
         return false;
     }
-    
+
     public Message getMessage() {
         return update.getMessage();
     }
@@ -94,8 +100,6 @@ public class Xupdate {
     public Message getRepliedMessage() {
         return update.getMessage().getReplyToMessage();
     }
-
-  
 
     public Long getRepliedUserId() {
         // Verifica que el Update tiene un mensaje y que hay un reply
@@ -109,7 +113,7 @@ public class Xupdate {
 
     public ArrayList<User> getReplyMencionedUsers(Message message) {
 
-        ArrayList<User>mentionsList = new ArrayList<>();
+        ArrayList<User> mentionsList = new ArrayList<>();
         // Obtén las entidades del mensaje
         List<MessageEntity> entities = message.getEntities();
 
@@ -129,24 +133,23 @@ public class Xupdate {
      * @return suer or group ids
      */
     public String getFromId() {
-
         if (isGroupMessage()) {
-
+            // Obtener el ID del chat (grupo, supergrupo o canal)
             if (this.update.hasCallbackQuery()) {
                 return this.update.getCallbackQuery().getMessage().getChat().getId().toString();
-
             } else if (this.update.hasMessage()) {
                 return this.update.getMessage().getChat().getId().toString();
-
             } else if (this.update.hasEditedMessage()) {
                 return this.update.getEditedMessage().getChat().getId().toString();
+            } else if (this.update.hasChannelPost()) {
+                return this.update.getChannelPost().getChat().getId().toString();
+            } else if (this.update.hasEditedChannelPost()) {
+                return this.update.getEditedChannelPost().getChat().getId().toString();
             }
-
         } else {
-
+            // Si no es grupo o canal, devolver el ID del remitente
             return getSenderId();
         }
-
         return "";
     }
 
@@ -159,8 +162,14 @@ public class Xupdate {
             sender = update.getMessage().getFrom();
         } else if (update.hasEditedMessage()) {
             sender = update.getEditedMessage().getFrom();
+        } else if (update.hasChannelPost()) {
+            // En un canal, el remitente no es un usuario, pero podemos devolver el senderChat ID si es relevante
+            return update.getChannelPost().getSenderChat().getId().toString();
+        } else if (update.hasEditedChannelPost()) {
+            return update.getEditedChannelPost().getSenderChat().getId().toString();
         }
 
+        // Retornar el ID del remitente si existe, o "null" en caso contrario
         return (sender != null) ? sender.getId().toString() : "null";
     }
 
@@ -171,6 +180,8 @@ public class Xupdate {
             return getTextFromMessage(update.getMessage());
         } else if (update.hasEditedMessage()) {
             return getTextFromMessage(update.getEditedMessage());
+        }else if (update.hasChannelPost()) {
+            return update.getChannelPost().getText();
         }
         return "null";
     }
@@ -270,18 +281,13 @@ public class Xupdate {
     }
 
     public boolean isExpired() {
+        // Obtener la fecha del mensaje según el tipo de actualización
+        Integer date = getUpdateDate();
 
-        Integer date = 0;
-
-        if (this.update.hasCallbackQuery()) {
-            date = this.update.getCallbackQuery().getMessage().getDate();
-
-        } else if (this.update.hasMessage()) {
-            date = this.update.getMessage().getDate();
-        } else if (this.update.hasEditedMessage()) {
-
-            date = this.update.getEditedMessage().getDate();
-
+        // Validar que la fecha exista
+        if (date == null) {
+            // Si no hay una fecha válida, considerarlo no expirado o manejarlo según el caso
+            return false;
         }
 
         // Obtener el tiempo actual en segundos
@@ -289,6 +295,17 @@ public class Xupdate {
 
         // Comprobar si han pasado más de 10 minutos (600 segundos)
         return (currentTimestamp - date) > SystemSecurity.UPDATE_EXPIRATION_TIME;
+    }
+
+    private Integer getUpdateDate() {
+        if (this.update.hasCallbackQuery()) {
+            return this.update.getCallbackQuery().getMessage().getDate();
+        } else if (this.update.hasMessage()) {
+            return this.update.getMessage().getDate();
+        } else if (this.update.hasEditedMessage()) {
+            return this.update.getEditedMessage().getDate();
+        }
+        return null; // Retornar null si no se encuentra una fecha
     }
 
     public TelegramFile getFile() {

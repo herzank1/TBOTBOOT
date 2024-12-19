@@ -25,6 +25,7 @@ public class GuiScreen {
     GuiBase current;
     /*true si las opciones de un menu se muestran en el mensaje o como botones*/
     boolean menuInterface;
+    String menuText = "Seleccione una opcion.";
 
     /**
      * *
@@ -89,7 +90,7 @@ public class GuiScreen {
 
         if (this.menuInterface && current instanceof GuiMenu) {
 
-            return "Seleccione una opcion.";
+            return menuText;
         } else if (current instanceof GuiItem) {
             return ((GuiItem) current).draw();
         } else if (current instanceof GuiItemAction) {
@@ -200,5 +201,15 @@ public class GuiScreen {
         }
 
     }
+
+    public String getMenuText() {
+        return menuText;
+    }
+
+    public void setMenuText(String menuText) {
+        this.menuText = menuText;
+    }
+    
+    
 
 }

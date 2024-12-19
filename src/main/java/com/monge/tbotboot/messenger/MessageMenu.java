@@ -126,6 +126,15 @@ public class MessageMenu {
         return menu;
 
     }
+    
+     public static MessageMenu okAndDeleteMessage(String callback) {
+
+        MessageMenu menu = new MessageMenu();
+        menu.addButton("✅ Ok", callback);
+
+        return menu;
+
+    }
 
     public static MessageMenu okAndDeleteMessage() {
 
